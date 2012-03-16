@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<script src="{{ STATIC_URL }}jquery.sparkline.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(function() {
+		$('.inlinesparkline').sparkline('html', { type: 'line'});
+	});
+	
+</script>
+{% endblock %}
+
+{% block body %}
+<h1>Deals</h1>
+<table>
+{% for deal in deals %}
+<tr>
+
+<td><a href="http://www.fatwallet.com/forums/hot-deals/{{ deal.post_id }}/">{{ deal.title }}</a></td>
+<td><span class="inlinesparkline">
+	{% for history in deal.history.all %}
+	{{ history.replycount}}
+	{% if not forloop.last %},
+	{% endif %}
+	{% endfor %}
+</span></td>
+<td>{% for history in deal.history.all %}
+	{{ history.replycount}},{% endfor %}
+</td>
+<td>{{ deal.replyslope }}</td>
+<td>{{ deal.viewslope }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

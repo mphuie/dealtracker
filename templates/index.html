@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<script type="text/javascript">
+$(function() {
+	$("a.deal").click(function() {
+		event.preventDefault();
+		var url = $(this).attr("href");
+		$.get(url);
+		$(this).parent().parent().hide();
+	})
+
+});
+</script>
+{% endblock %}
+
+{% block body %}
+<h1>Deals</h1>
+<table>
+<tr>
+	<th>Title</th>
+	<th>change in replies</th>
+	<th>change in views</th>
+	<th>Total replies</th>
+	<th>Rating</th>
+	<th>Source</th>
+		
+</tr>
+{% for deal in deals %}
+<tr class="{% cycle 'bgwhite' 'bglb' %}">
+	{% if deal.source == "fatwallet" %}
+	<td><a href="http://www.fatwallet.com/forums/hot-deals/{{ deal.post_id }}/">{{ deal.title }}</a></td>
+	{% endif %}
+	{% if deal.source == "slickdeals" %}
+	<td><a href="http://www.slickdeals.net/f/{{ deal.post_id }}/">{{ deal.title }}</a></td>
+	{% endif %}
+	
+	<td>{{ deal.replyslope }}</td>
+	<td>{{ deal.viewslope }}</td>
+	<td>{{ deal.recent.replycount }}</td>
+	<td>{{ deal.recent.rating }}</td>
+	<td>{{ deal.source }}</td>
+	<td><a class="deal" href="ignore/{{ deal.post_id }}">ignore</a></td>
+	
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
