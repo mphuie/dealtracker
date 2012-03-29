@@ -8,6 +8,7 @@ class Deal(models.Model):
 	last_post_date = models.DateTimeField()
 	source = models.CharField(max_length=50)
 	post_id = models.IntegerField()
+	price = models.DecimalField(max_digits=7, decimal_places=2)
 	
 	def replyslope(self):
 		lasttwo = self.history.all().order_by("-t")[:2]

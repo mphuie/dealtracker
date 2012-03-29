@@ -22,6 +22,11 @@ for match in re.finditer('(?s)<tr id="sdpostrow_\d+">.*?</tr>', html):
 		post_id = match_post.group(1)
 		post_title = match_post.group(2)
 		post_title = re.sub("'", "''", post_title)
+		match_title = re.search(r"\$(\d+[.\d]+)", post_title)
+		if match_title:
+			price = match_title.group(1)
+		else:
+			price = str(-1)
 	
 	match_post = re.search(r"Replies: ([\d,]+),\s+Views: ([\d,]+)", post_html, re.DOTALL)
 	if match_post:
@@ -56,6 +61,7 @@ for match in re.finditer('(?s)<tr id="sdpostrow_\d+">.*?</tr>', html):
 
 		print posttimestamp
 
+	
 	match_post = re.search(r'  <!-- Last Post -->(.*?)</span><br />\s+<a href="/forums/member\.php\?find=lastposter[^<]+>', post_html, re.DOTALL)
 	if match_post:
 		last_post_date = match_post.group(1)
@@ -74,7 +80,7 @@ for match in re.finditer('(?s)<tr id="sdpostrow_\d+">.*?</tr>', html):
 	row = c.fetchone()
 	if row is None:
 	# print "[%s] %s (%s rating, %s views, %s replies) %s" % (post_id, posttimestamp, rating, viewcount, replycount, post_title)
-		query = "INSERT INTO deals_deal (title, post_date, source, post_id, last_post_date) VALUES ('%s', '%s', '%s', %s, '%s')" % (post_title, posttimestamp, source, post_id, last_post_date)	
+		query = "INSERT INTO deals_deal (title, post_date, source, post_id, last_post_date, price) VALUES ('%s', '%s', '%s', %s, '%s', %s)" % (post_title, posttimestamp, source, post_id, last_post_date, price)	
 		c.execute(query)
 		db_id = c.lastrowid
 		query = "INSERT INTO deals_dealstatus (deal_id, replycount, viewcount, rating, t) VALUES (%s, %s, %s, %s, '%s')" % (db_id, replycount, viewcount, rating, now)

@@ -7,7 +7,7 @@ from deals.models import Deal, IgnoreList
 
 def index(request):
 	# deals = Deal.objects.all().order_by('-post_date')
-	deals = Deal.objects.extra(where=["Deals_deal.id NOT IN (SELECT deal_id FROM deals_IgnoreList)"]).order_by('-last_post_date')
+	deals = Deal.objects.extra(where=["Deals_deal.id NOT IN (SELECT deal_id FROM deals_IgnoreList)"]).order_by('-last_post_date')[0:50]
 	return render_to_response('index.html', { 'deals': deals }, context_instance=RequestContext(request))
 
 def ignore(request, post_id):
